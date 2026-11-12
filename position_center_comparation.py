@@ -80,7 +80,7 @@ for row, (projection_out, projection_center, axis_name) in enumerate(
     axs[row, 0].grid(True)
 
     # Position at the center
-    axs[row, 1].plot(freq, projection_center, color='blue', linewidth=2)
+    axs[row, 1].plot(freq, projection_center, color='#003c64ff', linewidth=2)
     axs[row, 1].set_title( f'Position at the Center - {axis_name} Axis')
     axs[row, 1].set_xlabel('Frequency (kHz)')
     axs[row, 1].set_ylabel('Signal Intensity')

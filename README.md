@@ -4,16 +4,6 @@ The repository provides routines for loading MRI data, performing multi-coil roo
 
 ## Features
 
-- Load MRI datasets acquired with the PyMR framework.
-- Organize raw data according to receiver, slice, phase-encoding, and readout dimensions.
-- Perform centered  Fourier transform reconstruction.
-- Perform multi-coil Root Sum of Squares (RSS) reconstruction.
-- Apply optional spatial shifts for image correction.
-- Reorient reconstructed volumes into:
-  - Axial
-  - Coronal
-  - Sagittal
-- Calculate physical display aspect ratios from the acquisition geometry.
-- Interactively adjust image intensity using minimum and maximum intensity sliders.
-- Optionally save figures automatically when the visualization window is closed.
-- Save visualization figures at high resolution.
+\- `Position.py` – Processes Position Method acquisition data, with optional 1D zero-filling, FFT calculation, data saving, and visualization of x, y, and z projections.
+
+\- `Position_Projection_Comparison.py` – Loads and compares x, y, and z projections acquired at the center and outside the center, using a shared frequency axis and side-by-side plots.

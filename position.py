@@ -132,6 +132,7 @@ if num_planes in [1, 3]:
         ax_raw.set_title(f'Acquired Signal - {plane} Axis')
         ax_raw.set_xlabel('Sample')
         ax_raw.set_ylabel('Magnitude')
+        ax_raw.ticklabel_format(axis='y', style='sci', scilimits=(0, 0), useMathText=True)
         ax_raw.grid(True)
 
         # FFT projection
@@ -140,6 +141,7 @@ if num_planes in [1, 3]:
         ax_fft.set_title(f'1D Projection - {plane} Axis')
         ax_fft.set_xlabel('Frequency (kHz)')
         ax_fft.set_ylabel('Normalized Signal Intensity')
+        ax_raw.ticklabel_format(axis='y', style='sci', scilimits=(0, 0), useMathText=True)
         ax_fft.grid(True)
 
         plt.tight_layout()
@@ -211,6 +213,7 @@ if num_planes in [1, 3]:
             axs[row, 0].set_title(f'Acquired Signal - {axis_name} Axis')
             axs[row, 0].set_xlabel('Sample')
             axs[row, 0].set_ylabel('Magnitude')
+            axs[row, 0].ticklabel_format(axis='y', style='sci', scilimits=(0, 0), useMathText=True)
             axs[row, 0].grid(True)
 
             # FFT projection
@@ -221,6 +224,7 @@ if num_planes in [1, 3]:
             axs[row, 1].set_title(f'1D Projection - {axis_name} Axis')
             axs[row, 1].set_xlabel('Frequency (kHz)')
             axs[row, 1].set_ylabel('Normalized Signal Intensity')
+            axs[row, 1].ticklabel_format(axis='y', style='sci', scilimits=(0, 0), useMathText=True)
             axs[row, 1].grid(True)
 
         plt.tight_layout()

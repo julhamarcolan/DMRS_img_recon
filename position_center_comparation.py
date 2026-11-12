@@ -77,6 +77,7 @@ for row, (projection_out, projection_center, axis_name) in enumerate(
     axs[row, 0].set_title(f'Position Outside the Center - {axis_name} Axis')
     axs[row, 0].set_xlabel('Frequency (kHz)')
     axs[row, 0].set_ylabel('Signal Intensity')
+    axs[row, 0].ticklabel_format(axis='y', style='sci', scilimits=(0, 0), useMathText=True)
     axs[row, 0].grid(True)
 
     # Position at the center
@@ -84,6 +85,7 @@ for row, (projection_out, projection_center, axis_name) in enumerate(
     axs[row, 1].set_title( f'Position at the Center - {axis_name} Axis')
     axs[row, 1].set_xlabel('Frequency (kHz)')
     axs[row, 1].set_ylabel('Signal Intensity')
+    axs[row, 1].ticklabel_format(axis='y', style='sci', scilimits=(0, 0), useMathText=True)
     axs[row, 1].grid(True)
 
 

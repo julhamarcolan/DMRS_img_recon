@@ -143,7 +143,7 @@ if num_planes in [1, 3]:
         ax_fft.grid(True)
 
         plt.tight_layout()
-        plt.savefig("fft_projection.png", dpi=300)
+        #plt.savefig("fft_projection.png", dpi=300)
         plt.show()
 
 
@@ -224,7 +224,7 @@ if num_planes in [1, 3]:
             axs[row, 1].grid(True)
 
         plt.tight_layout()
-        plt.savefig("fft_projection_xyz.png", dpi=300)
+        #plt.savefig("fft_projection_xyz.png", dpi=300)
         plt.show()
 
 

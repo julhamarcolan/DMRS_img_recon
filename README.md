@@ -4,6 +4,6 @@ The repository provides routines for loading MRI data, performing multi-coil roo
 
 ## Features
 
-\- `Position.py` – Processes Position Method acquisition data, with optional 1D zero-filling, FFT calculation, data saving, and visualization of x, y, and z projections.
+\- `position.py` – Processes Position Method acquisition data, with optional 1D zero-filling, FFT calculation, data saving, and visualization of x, y, and z projections.
 
-\- `Position_Projection_Comparison.py` – Loads and compares x, y, and z projections acquired at the center and outside the center, using a shared frequency axis and side-by-side plots.
+\- `position_center_comparison.py` – Loads and compares x, y, and z projections acquired at the center and outside the center, using a shared frequency axis and side-by-side plots.

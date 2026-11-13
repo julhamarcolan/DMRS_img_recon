@@ -7,14 +7,6 @@ acquisition and execution protocols using the PyMR framework.
 @author: Julia Marcolan
 """
 
-from pymr import config
-from pymr.core.data import DataManager
-from pymr.core.protocol import ProtocolManager
-from pymr.gui.mw_processing import WidgetManager
-import reconstruction_functions as mri_recon
-
-
-
 import sys
 import os
 import numpy as np

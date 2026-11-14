@@ -69,14 +69,28 @@ logger.info(f"Num planes: {num_planes}")
 FOV_x = prot_mng.get_parameter("FOVr", "system")
 FOV_y = prot_mng.get_parameter("FOVp2","system")
 
+
+
 if num_planes in [1, 3]:
+
     if num_planes == 1:
 
         data_2D = data[:, 0, :, :]
 
         logger.info(f"2D k-space shape: {data_2D.shape}")
 
-        # Apply 2D multi-coil RSS reconstruction
+        # --- Display k-space ---
+
+        kspace_rss = np.sqrt(np.sum(np.abs(data_2D)**2, axis=0))
+
+        mri_recon.show_k_space(
+            kspace_rss,
+            FOV_x=FOV_x,
+            FOV_y=FOV_y
+        )
+
+        # --- Apply 2D multi-coil RSS reconstruction ---
+
         data_img_original = mri_recon.reconstruct_rss2D(data_2D)
 
         logger.info(f"Reconstructed image shape: {data_img_original.shape}")
@@ -92,52 +106,70 @@ if num_planes in [1, 3]:
             output_filename=None
         )
 
-    # Preciso testar o 3 planos pq eu nao tinha um conjunto de dados 
     elif num_planes == 3:
 
-            logger.info("Reconstructing three planes.")
+        logger.info("Reconstructing three planes.")
 
-            reconstructed_images = []
+        reconstructed_images = []
+        kspace_planes = []
 
-            plane_names = ['Axial', 'Sagittal', 'Coronal']
+        plane_names = ['Axial', 'Sagittal', 'Coronal']
 
-            for i in range(num_planes):
+        for i in range(num_planes):
 
-                logger.info(f"Reconstructing {plane_names[i]} plane.")
+            logger.info(f"Reconstructing {plane_names[i]} plane.")
 
-                # Select current plane from all receivers
-                # Expected shape: (nRcvrs, nPhase, nReadout)
+            # Select current plane from all receivers
+            # Expected shape: (nRcvrs, nPhase, nReadout)
 
-                data_2D = data[:, i, :, :]
+            data_2D = data[:, i, :, :]
 
-                logger.info(f"{plane_names[i]} k-space shape: {data_2D.shape}")
+            logger.info(f"{plane_names[i]} k-space shape: {data_2D.shape}")
 
-                # --- Apply RSS reconstruction ---
+            # --- Calculate RSS k-space ---
 
-                image_2D = mri_recon.reconstruct_rss2D(data_2D)
+            kspace_rss = np.sqrt(np.sum(np.abs(data_2D)**2, axis=0))
 
-                logger.info(f"{plane_names[i]} image shape: {image_2D.shape}")
+            kspace_planes.append(kspace_rss)
 
-                reconstructed_images.append(image_2D)
+            # --- Apply RSS reconstruction ---
 
-            # --- Stack reconstructed images ---
+            image_2D = mri_recon.reconstruct_rss2D(data_2D)
 
-            data_img_original = np.stack(reconstructed_images,axis=0)
+            logger.info(f"{plane_names[i]} image shape: {image_2D.shape}")
 
-            logger.info(f"Final reconstructed data shape: {data_img_original.shape}")
+            reconstructed_images.append(image_2D)
 
-            # --- Display reconstructed images as a mosaic ---
+        # --- Stack k-space planes ---
 
-            mri_recon.show_mosaic(
-                data_img_original,
-                FOV_x=FOV_x,
-                FOV_y=FOV_y,
-                mosaic_size=None,
-                save_image=False,
-                output_filename=None,
-                first_slice_blank=False
-            )
+        kspace_data = np.stack(kspace_planes, axis=0)
 
+        # --- Display k-space mosaic ---
+
+        mri_recon.show_k_space_grid(
+            kspace_data,
+            3,
+            FOV_x=FOV_x,
+            FOV_y=FOV_y
+        )
+
+        # --- Stack reconstructed images ---
+
+        data_img_original = np.stack(reconstructed_images, axis=0)
+
+        logger.info(f"Final reconstructed data shape: {data_img_original.shape}")
+
+        # --- Display reconstructed images as a mosaic ---
+
+        mri_recon.show_mosaic(
+            data_img_original,
+            FOV_x=FOV_x,
+            FOV_y=FOV_y,
+            mosaic_size=None,
+            save_image=False,
+            output_filename=None,
+            first_slice_blank=False
+        )
 
     else:
 

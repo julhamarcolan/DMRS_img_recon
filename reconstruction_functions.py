@@ -6,9 +6,19 @@ Functions and classes for MRI reconstruction and visualization.
 
 import math
 import numpy as np
+import os
 import matplotlib.pyplot as plt
 from matplotlib.widgets import Slider
 from matplotlib.ticker import ScalarFormatter
+import nibabel as nib
+
+from pymr import config
+from pymr.core.data import DataManager
+from pymr.core.protocol import ProtocolManager
+from pymr.gui.mw_processing import WidgetManager
+from pymr.gui.mw_processing import InteractiveWidget
+from ciermag_spec.functions import logger
+
 
 class MRIGeometry:
     """
@@ -1338,3 +1348,38 @@ def show_k_space_grid(data, num_planes, FOV_x, FOV_y):
 
     plt.tight_layout()
     plt.show()
+
+
+def save_nifti_2D(kspace_data, image_data, output_folder='NIfTI'):
+    """
+    Save K-space and reconstructed image data as NIfTI images.
+
+    Args:
+        kspace_data (ndarray): K-space data with shape (num_slices, Ny, Nx).
+        image_data (ndarray): Reconstructed image data with shape (num_slices, Ny, Nx).
+        output_folder (str): Folder to save the NIfTI files.
+    """
+
+    # --- Create output folder ---
+
+    if not os.path.exists(output_folder):
+        os.makedirs(output_folder)
+
+    # --- Save K-space ---
+
+    kspace_nifti = np.transpose(np.abs(kspace_data), (1, 2, 0))
+
+    nifti_kspace = nib.Nifti1Image(kspace_nifti, affine=np.eye(4))
+
+    nib.save(nifti_kspace, f'{output_folder}/kspace.nii.gz')
+
+    # --- Save reconstructed image ---
+
+    image_nifti = np.transpose(np.abs(image_data), (1, 2, 0))
+
+    nifti_image = nib.Nifti1Image(image_nifti, affine=np.eye(4))
+
+    nib.save(nifti_image, f'{output_folder}/reconstructed_image.nii.gz')
+
+    logger.info(f"K-space NIfTI saved: {output_folder}/kspace.nii.gz")
+    logger.info(f"Reconstructed image NIfTI saved: {output_folder}/image.nii.gz")

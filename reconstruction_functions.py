@@ -1271,10 +1271,70 @@ def zero_fill_1D(data, dim):
     padding = dim - N
 
     # --- Apply zero-filling symmetrically ---
-    padding_left = pad
-    ding // 2
+    padding_left = padding // 2
     padding_right = padding - padding_left
 
     zero_filled_data = np.pad(data, (padding_left, padding_right), mode='constant')
 
     return zero_filled_data
+
+def show_k_space(data, FOV_x, FOV_y):
+    """
+    Display a single K-space image in grayscale, preserving the
+    physical aspect ratio defined by the FOV.
+
+    Args:
+        data (ndarray): 2D K-space data.
+        FOV_x (float): FOV in the readout direction.
+        FOV_y (float): FOV in the phase encoding direction.
+    """
+
+    kspace = np.abs(data)
+    kspace = kspace / np.max(kspace) if np.max(kspace) != 0 else kspace
+
+    Ny, Nx = kspace.shape
+
+    aspect_ratio = (FOV_y / Ny) / (FOV_x / Nx)
+
+    plt.figure(figsize=(6, 6))
+
+    plt.imshow(kspace, cmap='gray', aspect=aspect_ratio)
+
+    plt.axis('off')
+    plt.tight_layout()
+    plt.show()
+
+def show_k_space_grid(data, num_planes, FOV_x, FOV_y):
+    """
+    Display multiple K-space images in a horizontal grid,
+    preserving the physical aspect ratio.
+
+    Args:
+        data (ndarray): K-space data (shape: [N, H, W]).
+        num_planes (int): Number of acquired planes.
+        FOV_x (float): FOV in the readout direction.
+        FOV_y (float): FOV in the phase encoding direction.
+    """
+
+    anatomic_plane = ['Axial', 'Sagittal', 'Coronal']
+
+    fig, axes = plt.subplots(1, num_planes, figsize=(6 * num_planes, 5))
+
+    if num_planes == 1:
+        axes = [axes]
+
+    for i in range(num_planes):
+
+        kspace = np.abs(data[i])
+        kspace = kspace / np.max(kspace) if np.max(kspace) != 0 else kspace
+
+        Ny, Nx = kspace.shape
+
+        aspect_ratio = (FOV_y / Ny) / (FOV_x / Nx)
+
+        axes[i].imshow(kspace, cmap='gray', aspect=aspect_ratio)
+
+        axes[i].axis('off')
+
+    plt.tight_layout()
+    plt.show()

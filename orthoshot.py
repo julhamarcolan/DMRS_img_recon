@@ -14,6 +14,8 @@ import scipy as sc
 import pyqtgraph as pg
 import matplotlib.pyplot as plt
 import reconstruction_functions as mri_recon
+import nibabel as nib
+
 
 from pymr import config
 from pymr.core.data import DataManager
@@ -106,6 +108,9 @@ if num_planes in [1, 3]:
             output_filename=None
         )
 
+        # --- Save K-space and reconstructed image as NIfTI ---
+        #mri_recon.save_nifti_2D(kspace_rss[np.newaxis, :, :], data_img_original[np.newaxis, :, :], output_folder='NIfTI')
+
     elif num_planes == 3:
 
         logger.info("Reconstructing three planes.")
@@ -152,6 +157,10 @@ if num_planes in [1, 3]:
             FOV_x=FOV_x,
             FOV_y=FOV_y
         )
+        
+        # --- Save K-space and reconstructed image as NIfTI ---
+        #kspace_data = np.stack(kspace_planes, axis=0)
+        #mri_recon.save_nifti_2D(kspace_data, output_folder='NIfTI')
 
         # --- Stack reconstructed images ---
 
@@ -170,6 +179,11 @@ if num_planes in [1, 3]:
             output_filename=None,
             first_slice_blank=False
         )
+
+        # --- Save K-space and reconstructed image as NIfTI ---
+        mri_recon.save_nifti_2D(kspace_rss, data_img_original, output_folder='NIfTI')
+
+
 
     else:
 

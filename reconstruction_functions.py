@@ -41,6 +41,24 @@ class MRIGeometry:
         self.dx = FOVp2 / Np2
         self.dz = FOVp3 / Np3
 
+def apply_FFT_2D(data):
+    """
+    Apply 2D Fast Fourier Transform (FFT) to input data.
+
+    Args:
+        data (array_like): 2D input data.
+
+    Returns:
+        numpy.ndarray: Transformed data after applying 2D FFT.
+    """
+
+    shifted_data = np.fft.fftshift(data, axes=(0, 1))
+    transf_data = np.fft.fft(shifted_data, axis=0)
+    transf_data = np.fft.fft(transf_data, axis=1)
+    transf_data = np.fft.ifftshift(transf_data, axes=(0, 1))
+
+    return transf_data
+
 def apply_FFT_3D(data):
     """
     Applies centered N-dimensional FFT (k-space → image space).
@@ -54,7 +72,41 @@ def apply_FFT_3D(data):
 
     return np.fft.fftshift( np.fft.fftn( np.fft.ifftshift(data)))
 
-def reconstruct_rss(data):
+def reconstruct_rss2D(data):
+    """
+    Reconstructs a 2D MRI image from multi-coil k-space data using
+    Root Sum of Squares (RSS).
+
+    Args:
+        data (np.ndarray): K-space data with shape
+                           (nRcvrs, nPhase, nReadout).
+
+    Returns:
+        np.ndarray: RSS reconstructed image with shape (height, width).
+    """
+
+    nRcvrs = data.shape[0]
+
+    recon = []
+
+    # --- FFT reconstruction for each receiver ---
+    for r in range(nRcvrs):
+
+        img = apply_FFT_2D(data[r])
+        recon.append(img)
+
+    recon = np.array(recon)
+
+    # --- Root Sum of Squares reconstruction ---
+    RSS = np.sqrt(np.sum(np.abs(recon) ** 2, axis=0))
+
+    # --- Orientation correction ---
+    RSS = np.rot90(RSS)
+    RSS = np.flip(RSS, axis=1)
+
+    return RSS
+
+def reconstruct_rss3D(data):
     """
     Reconstructs MRI image from multi-coil k-space using RSS.
 
@@ -1186,8 +1238,6 @@ def data_mask(data, threshold):
     mask = data_norm > threshold
 
     return mask
-
-
 
 def zero_fill_1D(data, dim):
     """
